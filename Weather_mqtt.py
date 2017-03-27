@@ -24,7 +24,7 @@ def on_message(client, userdata, msg):
     curr_temp = weather_data.split()[1]
     print("Uploading to Graphite. Temp: " + str(curr_temp) + ". Voltage: " +
         str(msg.payload)) 
-    metrics.append(('weather_sensor.curirent_temp', (timestamp,
+    metrics.append(('weather_sensor.current_temp', (timestamp,
         int(curr_temp))))
     metrics.append(('weather_sensor.battery_voltage', (timestamp,
         float(msg.payload))))

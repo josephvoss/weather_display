@@ -1,0 +1,16 @@
+[Unit]
+Description=Simplified simple weather-display service
+After=multi-user.target
+
+[Service]
+Type=simple
+User=zahir
+Group=adm
+WorkingDirectory=/home/zahir/git/weather_display/
+ExecStart=/home/zahir/git/weather_display/Weather_mqtt.py
+StandardOutput=syslog
+StandardError=syslog
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

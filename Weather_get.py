@@ -2,9 +2,10 @@
 import json
 import urllib2
 import datetime
+import pytz
 
 def update():
-    curHour = datetime.datetime.now().hour
+    curHour = datetime.datetime.now(pytz.timezone('US/Central')).hour + 1
 
     f = urllib2.urlopen('http://api.wunderground.com/api/X/hourly/q/TX/Austin.json')
     json_string = f.read()
@@ -27,7 +28,7 @@ def update():
             maxTemp = temp
         if temp < minTemp:
             minTemp = temp
-        if hour == 0 and flag == 0:
+        if hour == curHour and flag == 0:
             curTemp = temp
             curHumid = humidity
             flag = 1

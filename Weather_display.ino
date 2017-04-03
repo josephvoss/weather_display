@@ -3,16 +3,40 @@
 #include <LiquidCrystal.h>
 
 const char WiFiSSID[] = "2WIRE3442";
-const char WiFiPSK[] = "gentlepotato743";
+const char WiFiPSK[] = "XXXX";
 
 const int LED_PIN = 2;
-const int BATT_PIN = 8;
+const int BATT_PIN = A0;
 
 const char serverHost[] = "192.168.1.111";
 
 WiFiClient wifi_client;
 PubSubClient client(serverHost, 1883, wifi_client);
-LiquidCrystal lcd(D6,D1,D2,D3,D4,D5);
+LiquidCrystal lcd(D1,D2,D3,D4,D5,D6);
+
+void callback(char* topic, byte* payload, unsigned int length)
+{
+  Serial.println("Message Received");
+  //Serial.print(topic);
+  //Serial.print(payload);
+  lcd.clear();
+  for (int i=0; i < 33; i++)
+  {
+    //Write payload to lcd, but allow for multiline display
+    if (i == 16)
+    {
+      lcd.setCursor(0,1);
+    }
+    lcd.write(payload[i]);
+  }
+
+  Serial.println("Entering sleep");
+  client.disconnect();
+  delay(100);
+  ESP.deepSleep(30 * 60 * 1000000, WAKE_RF_DEFAULT);
+  delay(100);
+  
+}
 
 void initHardware()
 {
@@ -55,6 +79,7 @@ void connectWiFi()
   //Serial.println("Wifi connected successfully");
   lcd.clear();
   lcd.print("WiFi Connected");
+  digitalWrite(LED_PIN, HIGH);
 }
 
 int connectToServer()
@@ -67,9 +92,11 @@ int connectToServer()
   {
     if (client.connect("ESP8266 Weather"))
     {
-      client.subscribe("weather_display");
+      client.subscribe("weather_display/weather");
       Serial.println("Connected to server");
       digitalWrite(LED_PIN, HIGH);
+      Serial.println("Sending data");
+      publishData();
       return 1;
     }
     counter += 1;
@@ -87,28 +114,11 @@ int connectToServer()
 
 bool publishData()
 {
-  int battery_level = analogRead(BATT_PIN);
+  int battery_level = analogRead(A0);
   float battery_voltage = battery_level*(5.0/1023.0);
   char battery_string[10];
   sprintf(battery_string, "%d", battery_voltage);
-  return client.publish("weather_display", (char*) battery_string);
-}
-
-void callback(char* topic, byte* payload, unsigned int length)
-{
-  Serial.print("New Message");
-  //Serial.print(topic);
-  //Serial.print(payload);
-  lcd.clear();
-  for (int i=0; i < length - 1; i++)
-  {
-    //Write payload to lcd, but allow for multiline display
-    if (i == 15)
-    {
-      lcd.setCursor(0,1);
-    }
-    lcd.write(payload[i]);
-  }  
+  return client.publish("weather_display/voltage", (char*) battery_string);
 }
 
 void setup() 

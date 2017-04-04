@@ -6,8 +6,9 @@ import pytz
 
 def update():
     curHour = datetime.datetime.now(pytz.timezone('US/Central')).hour + 1
+    curHour = curHour % 24 # modulate by 24 hours
 
-    f = urllib2.urlopen('http://api.wunderground.com/api/X/hourly/q/TX/Austin.json')
+    f = urllib2.urlopen('http://api.wunderground.com/api/c98d157e3c6a20bb/hourly/q/TX/Austin.json')
     json_string = f.read()
     f.close()
 

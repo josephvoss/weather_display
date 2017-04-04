@@ -3,7 +3,7 @@
 #include <LiquidCrystal.h>
 
 const char WiFiSSID[] = "2WIRE3442";
-const char WiFiPSK[] = "XXXX";
+const char WiFiPSK[] = "XXXXX";
 
 const int LED_PIN = 2;
 const int BATT_PIN = A0;
@@ -114,11 +114,12 @@ int connectToServer()
 
 bool publishData()
 {
-  int battery_level = analogRead(A0);
+  int battery_level = analogRead(BATT_PIN);
   float battery_voltage = battery_level*(5.0/1023.0);
   char battery_string[10];
-  sprintf(battery_string, "%d", battery_voltage);
-  return client.publish("weather_display/voltage", (char*) battery_string);
+  dtostrf(battery_voltage, 2, 5, battery_string);
+  Serial.printf("Battery level in: %s\n", battery_string);
+  return client.publish("weather_display/voltage", battery_string);
 }
 
 void setup() 

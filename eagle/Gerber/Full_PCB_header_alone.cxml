@@ -1,0 +1,14 @@
+<panel>
+   <size>Small</size>
+   <boards class="java.util.ArrayList">
+      <panelBoard>
+         <filename>C:\Users\joe\Documents\eagle\Weather_display\Weather_Display_Clean\Gerber\Full_PCB_header_alone</filename>
+         <x>3054</x>
+         <y>8178</y>
+         <angle>90</angle>
+         <generateOutline>false</generateOutline>
+         <topLayerTimestamp>2017-05-15 20:46:01.81 CDT</topLayerTimestamp>
+         <bottomLayerTimestamp>2017-05-15 20:46:01.153 CDT</bottomLayerTimestamp>
+      </panelBoard>
+   </boards>
+</panel>
